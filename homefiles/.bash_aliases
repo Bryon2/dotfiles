@@ -1,0 +1,7 @@
+alias hgrep='history | grep'
+alias ll='ls -lah'
+alias gs='git status'
+alias gp='git pull'
+alias gpu='git push'
+alias venv='source venv/bin/activate'
+alias update='sudo apt update && sudo apt upgrade -y'
