@@ -36,7 +36,7 @@ fi
 echo "Updating package list..."
 apt update -y &> /dev/null
 
-echo "🚀 Installing $SOFTWARE..."
+echo "Installing $SOFTWARE..."
 $INSTALL_CMD &> /dev/null
 
 # 6. Confirm installation
@@ -44,5 +44,5 @@ if command -v "$SOFTWARE" &> /dev/null; then
   echo "Installation complete!"
   echo "Try it by running: $TEST_CMD"
 else
-  echo " :( Something went wrong. '$SOFTWARE' was not found after installation."
+  echo ":( Something went wrong. '$SOFTWARE' was not found after installation."
 fi
