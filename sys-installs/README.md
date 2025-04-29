@@ -1,6 +1,6 @@
 # Task 3 
 ### Package installs
-1. Package: `Ansible`
+1. Package: `Singularity, Ansible, Anaconda, CUDA`
 
 This folder contains a script designed to assist users with safely installing software using the `apt` package manager on Debian-based systems. The script ensures proper system permissions, checks for command conflicts, and installs software non-interactively to streamline system setup.
 
