@@ -1,9 +1,5 @@
 #!/bin/bash
 
-SOFTWARE="ansible"
-INSTALL_CMD="sudo apt install -y $SOFTWARE"
-TEST_CMD="ansible --version"
-
 # 1. Check if running as root
 if [[ "$EUID" -ne 0 ]]; then
   echo "This script must be run as root. Try again with 'sudo'."
@@ -16,7 +12,40 @@ if ! command -v apt &> /dev/null; then
   exit 1
 fi
 
-# 3. Prompt user about what will be installed
+# 3. Prompt user to select software
+echo "Choose software to install:"
+echo "1) Singularity"
+echo "2) Ansible"
+echo "3) Anaconda"
+echo "4) CUDA"
+read -p "Enter the number (1-4): " CHOICE
+
+case $CHOICE in
+  1)
+    SOFTWARE="singularity-container"
+    TEST_CMD="singularity --version"
+    ;;
+  2)
+    SOFTWARE="ansible"
+    TEST_CMD="ansible --version"
+    ;;
+  3)
+    SOFTWARE="anaconda"
+    TEST_CMD="anaconda --version"
+    ;;
+  4)
+    SOFTWARE="nvidia-cuda-toolkit"
+    TEST_CMD="nvcc --version"
+    ;;
+  *)
+    echo "Invalid selection. Exiting."
+    exit 1
+    ;;
+esac
+
+INSTALL_CMD="sudo apt install -y $SOFTWARE"
+
+# 4. Prompt user about what will be installed
 echo "This script will install: $SOFTWARE (using apt)"
 read -p "Proceed with installation? (y/n): " CONFIRM
 
@@ -25,22 +54,22 @@ if [[ "$CONFIRM" != "y" ]]; then
   exit 1
 fi
 
-# 4. Check if the command name is already taken
-if command -v "$SOFTWARE" &> /dev/null; then
-  echo "Conflict detected: '$SOFTWARE' is already a command on this system."
+# 5. Check if the command name is already available
+if command -v $(echo $TEST_CMD | awk '{print $1}') &> /dev/null; then
+  echo "Conflict detected: '$(echo $TEST_CMD | awk '{print $1}')' is already installed."
   echo "To avoid unexpected behavior, the script will now exit."
   exit 1
 fi
 
-# 5. Update package list and install silently
+# 6. Update package list and install silently
 echo "Updating package list..."
 apt update -y &> /dev/null
 
 echo "Installing $SOFTWARE..."
 $INSTALL_CMD &> /dev/null
 
-# 6. Confirm installation
-if command -v "$SOFTWARE" &> /dev/null; then
+# 7. Confirm installation
+if command -v $(echo $TEST_CMD | awk '{print $1}') &> /dev/null; then
   echo "Installation complete!"
   echo "Try it by running: $TEST_CMD"
 else
